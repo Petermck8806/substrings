@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+my $search_string = 'peter';
+
 sub read_strings{
 	my $filename = shift @_;
 
@@ -17,7 +19,7 @@ sub read_strings{
 sub evaluate_string{
 	my $sequence = shift @_;
 
-	return index($sequence, 'peter') != -1;
+	return index($sequence, $search_string);
 }
 
 sub evaluate_occurrences{
@@ -27,7 +29,7 @@ sub evaluate_occurrences{
 	my @occurrences = ();
 
 	foreach my $a (@string_arr){
-		if(evaluate_string($a)){
+		if(evaluate_string($a) != -1){
 			push (@occurrences, $a);
 		}
 	}
@@ -45,14 +47,34 @@ sub evaluate_string_list{
 	my $peter_string_count = 0;
 
 	foreach $a (@strings){
-		if(evaluate_string($a) ){
+		if(evaluate_string($a) != -1){
 			$peter_string_count++;
 		}  
 	}
 
-	my @results = evaluate_occurrences(@strings,'Peter');
+	my @results = evaluate_occurrences(@strings,$search_string);
 
 	return $peter_string_count, @results;
+}
+
+#takes in an array of strings
+sub locate_string_postions{
+	my @strings = @_;
+	my %occurrence_per;
+
+	foreach my $i (@strings){
+		my $local = $i;
+		my $count = 0;
+
+		while((my $position = evaluate_string($local)) != -1){
+			$count++;
+
+			$local = substr($local,$position + length($search_string));
+		}
+		$occurrence_per{$i} = $count;
+	}
+
+	return %occurrence_per;
 }
 
 my @string_list = read_strings("input.txt");
@@ -65,5 +87,13 @@ print "Strings containing Peter:\n" . @result_string . "\n\n";
 
 
 foreach my $i (@result_string){
-	print $i . "\n\n";
+	print $i . "\n";
+}
+
+print "\n";
+
+my %hash = locate_string_postions(@result_string);
+
+for my $item (keys %hash){
+	print "The occurrence of Peter in " . $item . " is [" . $hash{$item} . "]\n";
 }
