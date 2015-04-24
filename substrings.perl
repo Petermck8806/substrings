@@ -58,7 +58,12 @@ sub evaluate_string_list{
 my @string_list = read_strings("input.txt");
 my $length = @string_list;
 
-print "Strings to evaluate: [" . $length . "]\n";
+print "Strings to evaluate: [" . $length . "]\n\n";
 my ($count, @result_string) = evaluate_string_list(@string_list);
-print "Count of Strings containing Peter: [" . $count . "]\n";
-print "Strings containing Peter:\n" . @result_string . "\n";
+print "Count of Strings containing Peter: [" . $count . "]\n\n";
+print "Strings containing Peter:\n" . @result_string . "\n\n";
+
+
+foreach my $i (@result_string){
+	print $i . "\n\n";
+}
